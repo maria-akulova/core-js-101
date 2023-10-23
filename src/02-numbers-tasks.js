@@ -71,7 +71,7 @@ function getAverage(value1, value2) {
  *   (-5,0) (10,-10) => 18.027756377319946
  */
 function getDistanceBetweenPoints(x1, y1, x2, y2) {
-  return Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
+  return Math.hypot((x2 - x1), (y2 - y1));
 }
 
 /**
@@ -111,11 +111,9 @@ function getLinearEquationRoot(a, b) {
  */
 function getAngleBetweenVectors(x1, y1, x2, y2) {
   const dotProduct = x1 * x2 + y1 * y2;
-  const magnitude1 = Math.sqrt(x1 ** 2 + y1 ** 2);
-  const magnitude2 = Math.sqrt(x2 ** 2 + y2 ** 2);
-
+  const magnitude1 = Math.hypot(x1, y1);
+  const magnitude2 = Math.hypot(x2, y2);
   const cosTheta = dotProduct / (magnitude1 * magnitude2);
-
   return Math.acos(cosTheta);
 }
 
@@ -167,7 +165,6 @@ function parseNumberFromString(value) {
 function getParallelepipedDiagonal(a, b, c) {
   return Math.sqrt(a ** 2 + b ** 2 + c ** 2);
 }
-
 
 /**
  * Returns the number rounded to specified power of 10.
