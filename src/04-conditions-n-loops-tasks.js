@@ -332,10 +332,30 @@ function getDigitalRoot(num) {
  *   '{)' = false
  *   '{[(<{[]}>)]}' = true
  */
-function isBracketsBalanced(/* str */) {
-  throw new Error('Not implemented');
+function isBracketsBalanced(str) {
+  const open = ['(', '[', '{', '<'];
+  const close = [')', ']', '}', '>'];
+  const source = str.split('');
+  const steck = [];
+  for (let i = 0; i < source.length; i += 1) {
+    if (steck.length === 0) {
+      if (open.indexOf(source[i]) < 0) return false;
+      steck.push(source[i]);
+    } else {
+      const top = steck.at(-1);
+      if (open.indexOf(source[i]) >= 0) {
+        steck.push(source[i]);
+      } else if (close.indexOf(source[i]) >= 0) {
+        const indexOpen = open.indexOf(top);
+        const indexClose = close.indexOf(source[i]);
+        if (indexOpen === indexClose) {
+          steck.pop();
+        } else return false;
+      } else return false;
+    }
+  }
+  return steck.length === 0;
 }
-
 
 /**
  * Returns the string with n-ary (binary, ternary, etc, where n <= 10)
@@ -374,10 +394,33 @@ function toNaryString(num, n) {
  *   ['/web/assets/style.css', '/.bin/mocha',  '/read.me'] => '/'
  *   ['/web/favicon.ico', '/web-scripts/dump', '/verbalizer/logs'] => '/'
  */
-function getCommonDirectoryPath(/* pathes */) {
-  throw new Error('Not implemented');
+function getCommonDirectoryPath(pathes) {
+  const source = [];
+  const result = [];
+  let min = 0;
+  for (let i = 0; i < pathes.length - 1; i += 1) {
+    source.push(pathes[i].split(''));
+    if (pathes[i].length > min) {
+      min = pathes[i].length;
+    }
+  }
+  if (pathes.length === 2) {
+    for (let i = 0; i < min; i += 1) {
+      if (pathes[0][i] === pathes[1][i]) {
+        result.push(pathes[0][i]);
+      } else break;
+    }
+  }
+  if (pathes.length === 3) {
+    for (let i = 0; i < min; i += 1) {
+      if (pathes[0][i] === pathes[1][i] && pathes[0][i] === pathes[2][i]) {
+        result.push(pathes[0][i]);
+      } else break;
+    }
+  }
+  if (!result.length) return '';
+  return result.slice(0, result.lastIndexOf('/') + 1).join('');
 }
-
 
 /**
  * Returns the product of two specified matrixes.
@@ -432,8 +475,37 @@ function getMatrixProduct(/* m1, m2 */) {
  *    [    ,   ,    ]]
  *
  */
-function evaluateTicTacToePosition(/* position */) {
-  throw new Error('Not implemented');
+function evaluateTicTacToePosition(position) {
+  const rowX = ['X', 'X', 'X'];
+  const row0 = ['0', '0', '0'];
+  function isRightHypot(arr) {
+    const result = arr.reduce((ac, cur, index) => [...ac, cur[index]], []);
+    if (result.toString().includes(row0.toString())) return '0';
+    if (result.toString().includes(rowX.toString())) return 'X';
+    return false;
+  }
+  function isLeftHypot() {
+    const arr = position.reverse();
+    return isRightHypot(arr);
+  }
+  function isRow(arr) {
+    if (arr.some((el) => el.toString().includes(row0.toString()))) return '0';
+    if (arr.some((el) => el.toString().includes(rowX.toString()))) return 'X';
+    return false;
+  }
+  function isColumn() {
+    const column1 = [];
+    const column2 = [];
+    const column3 = [];
+    const result = [column1, column2, column3];
+    position.forEach((el) => {
+      column1.push(el[0]);
+      column2.push(el[1]);
+      column3.push(el[2]);
+    });
+    return isRow(result);
+  }
+  return isRightHypot(position) || isLeftHypot() || isRow(position) || isColumn() || undefined;
 }
 
 
